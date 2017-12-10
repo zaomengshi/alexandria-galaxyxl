@@ -329,7 +329,7 @@ def upload_image(filename, config):
     try:
         return ptpimg_upload(filename, config.get('ptpimg', 'key'))
     except:
-        print("ptpimg upload failed! :(")
+        print("ptpimg上传失败 :(")
         return ""
 
 def ptpimg_upload(filename, key):
@@ -391,7 +391,7 @@ def parse_config(config_path):
         with open(config_path, 'w') as f:
             config.write(f)
 
-        print('请编辑配置文件: %s' % config_path)
+        print('首次启动请编辑配置文件: %s' % config_path)
         sys.exit(2)
 
     return config
@@ -463,35 +463,35 @@ def rename_ebook(original, output_dir, metadata):
 def upload(filename, config, trackers):
     isbn = extract_isbn(filename)
     if not isbn:
-        print("Failed to extract ISBN from:", filename, "\n")
+        print("无法提取ISBN信息from:", filename, "\n")
         return
 
     print
     metadata = fetch_metadata(isbn, config)
     if not metadata:
-        print("Failed to fetch metadata for %s: %s" % (isbn, filename))
+        print("搜索metadata信息失败: %s: %s" % (isbn, filename))
         return
 
-    print("Book found: %s (%s) [%s]" % (metadata['title'], metadata['year'], determine_format(filename)[1:].upper()))
+    print("发现电子书: %s (%s) [%s]" % (metadata['title'], metadata['year'], determine_format(filename)[1:].upper()))
     ebook = rename_ebook(filename, os.path.expanduser(config.get('global', 'data_dir')), metadata)
 
     for i, tracker in enumerate(trackers):
         if tracker.has_book(metadata):
-            print("%s already has it.\n" % tracker.name)
+            print("%s 已经存在.\n" % tracker.name)
             continue
 
-        print("Uploading to %s..." % tracker.name),
+        print("成功上传 %s..." % tracker.name),
 
         # create each tracker's torrent with a different piece size so
         # that the torrents each have different info hashes (otherwise only one will seed in rtorrent)
         torrent = make_torrent(ebook, tracker.announce, tracker.name, piece_size=15+i)
 
         if not tracker.upload(ebook, torrent, metadata):
-            print("failed!")
+            print("失败!")
             continue
 
         shutil.copy(torrent.decode('utf-8'), os.path.expanduser(config.get('global', 'torrent_dir')))
-        print("done!")
+        print("完成")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -507,7 +507,7 @@ def main():
         username = config.get(tracker.__name__.lower(), 'username')
         password = config.get(tracker.__name__.lower(), 'password')
         if username and password:
-            print("Logging into %s...\n" % tracker.name)
+            print("正在登录 %s...\n" % tracker.name)
             trackers.append(tracker(username, password))
 
     books = itertools.chain(*(locate(book_dir, is_book) for book_dir in args.book_dirs))
