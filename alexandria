@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 #coding=utf-8
+#import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 import time
 import re
 import os
@@ -478,10 +481,10 @@ def upload(filename, config, trackers):
 
     for i, tracker in enumerate(trackers):
         if tracker.has_book(metadata):
-            print("%s 已经存在.\n" % tracker.name)
+            print("%s中存在该书信息，请勿重复上传\n" % tracker.name)
             continue
 
-        print("成功上传 %s..." % tracker.name),
+        print("上传至 %s..." % tracker.name),
 
         # create each tracker's torrent with a different piece size so
         # that the torrents each have different info hashes (otherwise only one will seed in rtorrent)
@@ -492,7 +495,7 @@ def upload(filename, config, trackers):
             continue
 
         shutil.copy(torrent.decode('utf-8'), os.path.expanduser(config.get('global', 'torrent_dir')))
-        print("完成")
+        print("完成！")
 
 def main():
     parser = argparse.ArgumentParser()
