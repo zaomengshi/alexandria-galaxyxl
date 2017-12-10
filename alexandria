@@ -381,9 +381,9 @@ def parse_config(config_path):
         config.set('bibliotik', 'username', '')
         config.set('bibliotik', 'password', '')
 
-        config.add_section('pth')
-        config.set('pth', 'username', '')
-        config.set('pth', 'password', '')
+        config.add_section('red')
+        config.set('red', 'username', '')
+        config.set('red', 'password', '')
 
         config.add_section('ptpimg')
         config.set('ptpimg', 'key', '')
@@ -391,7 +391,7 @@ def parse_config(config_path):
         with open(config_path, 'w') as f:
             config.write(f)
 
-        print('Please edit the configuration file: %s' % config_path)
+        print('请编辑配置文件: %s' % config_path)
         sys.exit(2)
 
     return config
